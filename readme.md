@@ -20,13 +20,14 @@
 ## Home Page
 ### upload, view, and delete the files
 ![img.png](Notes/home1.png)
-1. create file POJO: model/File;
-2. create file mapper with MyBaits: mapper/FileMapper
+1. create file POJO: model/File; 
+2. create file mapper with MyBaits: mapper/FileMapper  
 3. create services for file operations:service/FileService
-4. create controller for file (homeController) 
-   use modelAttribute to create model before mapping
-   ``@ModelAttribute("newFileForm") FileForm newFileForm``
-5. change html to thymeleaf template(home.html)
+4. create controller for file (homeController, fileController)
+   - put the file controller out of the home controller: (separate concerns): fileController
+   - use modelAttribute to create model before mapping  
+      - ``@ModelAttribute("newFileForm") FileForm newFileForm``
+5. change html to thymeleaf template(home.html)  
 ### upload, view, and delete the Notes
 ![img_1.png](Notes/home2.png)
 ### upload, view, and delete the credentials
