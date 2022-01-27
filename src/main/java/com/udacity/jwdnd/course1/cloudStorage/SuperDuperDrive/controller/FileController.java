@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.FileService;
-import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.UserService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -16,12 +15,11 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/home")
-public class fileController {
-//    private final UserService userService;
+public class FileController {
     private final FileService fileService;
     private final Util util;
 
-    public fileController(FileService fileService, Util util) {
+    public FileController(FileService fileService, Util util) {
         this.fileService = fileService;
         this.util = util;
     }

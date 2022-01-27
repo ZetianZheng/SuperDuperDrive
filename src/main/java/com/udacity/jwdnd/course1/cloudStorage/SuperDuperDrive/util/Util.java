@@ -13,7 +13,6 @@ public class Util {
         this.userService = userService;
     }
 
-
     public User getUserByAuth(Authentication authentication) {
         String username = authentication.getName();
         return userService.getUser(username);
