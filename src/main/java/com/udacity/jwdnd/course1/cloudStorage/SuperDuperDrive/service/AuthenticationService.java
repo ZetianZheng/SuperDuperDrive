@@ -43,10 +43,9 @@ public class AuthenticationService implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         // 通过MyBaits获得数据库中的用户信息。
-        User user = userMapper.getUser(username);
+        User user = userMapper.getUserByName(username);
         if(user != null) {
             // 将用户输入的秘钥加密
-            // TODO 修改为可以加密并解密的双向方法。
             String encodedSalt = user.getSalt();
             String hashedPassword = hashService.getHashedValue(password, encodedSalt);
             // 相等则返回一个token。

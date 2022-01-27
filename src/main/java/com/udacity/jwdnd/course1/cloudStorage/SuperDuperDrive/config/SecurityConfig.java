@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .defaultSuccessUrl("/home", true);
+        // 虽然spring security帮我们设置了logout的登出url，但是没有设置权限
         http.logout()
                 .logoutSuccessUrl("/login?logout").permitAll();
     }

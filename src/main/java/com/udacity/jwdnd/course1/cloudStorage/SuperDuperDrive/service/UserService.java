@@ -27,7 +27,7 @@ public class UserService {
 
     // return true if this user can be created(not exists), false if not.
     public boolean isUserNameAvailable(String username) {
-        return userMapper.getUser(username) == null;
+        return userMapper.getUserByName(username) == null;
     }
 
     // create user through POJO form
@@ -42,6 +42,6 @@ public class UserService {
 
     // get user by user name
     public User getUser(String username) {
-        return userMapper.getUser(username);
+        return userMapper.getUserByName(username);
     }
 }

@@ -17,3 +17,17 @@
    2. implemented **userService** (isUserNameAvailable, createUser, getUser)
    3. implemented **login and signup controller** which use createUser to create user and handle some register error cases
    
+## Home Page
+### upload, view, and delete the files
+![img.png](Notes/home1.png)
+1. create file POJO: model/File;
+2. create file mapper with MyBaits: mapper/FileMapper
+3. create services for file operations:service/FileService
+4. create controller for file (homeController) 
+   use modelAttribute to create model before mapping
+   ``@ModelAttribute("newFileForm") FileForm newFileForm``
+5. change html to thymeleaf template(home.html)
+### upload, view, and delete the Notes
+![img_1.png](Notes/home2.png)
+### upload, view, and delete the credentials
+![img_2.png](Notes/home3.png)
