@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.FileService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
@@ -33,7 +34,10 @@ public class FileController {
      * TODO 使用透明窗口display "message" to client
      */
     @PostMapping
-    public String addNewFile(Authentication authentication, @ModelAttribute("newFileForm") FileForm newFileForm, Model model) {
+    public String addNewFile(Authentication authentication,
+                             @ModelAttribute("newFileForm") FileForm newFileForm,
+                             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+                             Model model) {
         // get username from authentication and then got User POJO from User service:
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
@@ -82,6 +86,8 @@ public class FileController {
      *
      * TODO what if different user have same file name?
      *      two parameters: fileService.deleteFile(filename, userId);
+     *
+     * TODO why I need to render NoteForm too?
      * delete file by the filename which got by path variable.
      * before delete, the newFileForm object be created to render home.
      * @param authentication
@@ -93,6 +99,7 @@ public class FileController {
     public String deleteFile(Authentication authentication,
                              @PathVariable String filename,
                              @ModelAttribute("newFileForm") FileForm newFileForm,
+                             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
                              Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();

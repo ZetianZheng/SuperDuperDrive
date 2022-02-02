@@ -21,6 +21,7 @@
 ### upload, view, and delete the files
 ![img.png](Notes/home1.png)
 1. create file POJO: model/File; 
+   create file form POJO: model/FileForm to receive the POJO that user send
 2. create file mapper with MyBaits: mapper/FileMapper  
 3. create services for file operations:service/FileService
 4. create controller for file (homeController, fileController)
@@ -30,5 +31,11 @@
 5. change html to thymeleaf template(home.html)  
 ### upload, view, and delete the Notes
 ![img_1.png](Notes/home2.png)
+1. create the POJO: model/Note
+   create file form POJO: model/FileForm to receive the POJO that user send
+2. create file mapper with MyBaits: mapper/NoteMapper
+3. create services for Note operations:service/NoteService
+4. create controller for notes(NoteController)
+5. change html to thymeleaf template(home.html)
 ### upload, view, and delete the credentials
 ![img_2.png](Notes/home3.png)

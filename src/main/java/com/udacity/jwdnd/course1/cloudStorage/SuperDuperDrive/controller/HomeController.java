@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.FileService;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.NoteService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.UserService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
 import org.springframework.security.core.Authentication;
@@ -16,11 +18,13 @@ public class HomeController {
     // TODO: why final?
     private final UserService userService;
     private final FileService fileService;
+    private final NoteService noteService;
     private final Util util;
 
-    public HomeController(UserService userService, FileService fileService, Util util) {
+    public HomeController(UserService userService, FileService fileService, NoteService noteService, Util util) {
         this.userService = userService;
         this.fileService = fileService;
+        this.noteService = noteService;
         this.util = util;
     }
 
@@ -35,11 +39,13 @@ public class HomeController {
     public String homeView(
             Authentication authentication,
             @ModelAttribute("newFileForm") FileForm newFileForm,
+            @ModelAttribute("newNoteForm") NoteForm newNoteForm,
             Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
 
         model.addAttribute("files", this.fileService.getALlFiles(userId));
+        model.addAttribute("notes", this.noteService.getAllNotes(userId));
         return "home";
     }
 }
