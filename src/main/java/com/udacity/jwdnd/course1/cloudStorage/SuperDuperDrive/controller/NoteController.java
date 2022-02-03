@@ -1,9 +1,6 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
-import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
-import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.Note;
-import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
-import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.*;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.NoteService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
 import org.springframework.security.core.Authentication;
@@ -24,6 +21,7 @@ public class NoteController {
 
     /**
      * if have GET request from "/note", render home page and only note list for user
+     * TODO: Is there any method not to write 3 modelAttribute?
      * @param authentication
      * @param newFileForm
      * @param newNoteForm
@@ -35,6 +33,7 @@ public class NoteController {
             Authentication authentication,
             @ModelAttribute("newFileForm") FileForm newFileForm,
             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+            @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
             Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
@@ -55,12 +54,14 @@ public class NoteController {
     public String addNewNote(Authentication authentication,
                              @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
                              Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
         String userName = user.getUsername();
 
         // get note object from user submit:
+        // get noteIdStr from user submit, if this note exists, update it, if not, create a new one
         String noteIdStr = newNoteForm.getNoteId();
         String title = newNoteForm.getTitle();
         String description = newNoteForm.getDescription();

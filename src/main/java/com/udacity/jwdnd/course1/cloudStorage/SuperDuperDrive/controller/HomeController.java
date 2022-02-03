@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
@@ -40,6 +41,7 @@ public class HomeController {
             Authentication authentication,
             @ModelAttribute("newFileForm") FileForm newFileForm,
             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+            @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
             Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();

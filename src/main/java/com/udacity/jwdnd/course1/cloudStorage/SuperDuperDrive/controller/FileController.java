@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
@@ -37,6 +38,7 @@ public class FileController {
     public String addNewFile(Authentication authentication,
                              @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
                              Model model) {
         // get username from authentication and then got User POJO from User service:
         User user = util.getUserByAuth(authentication);
@@ -100,6 +102,7 @@ public class FileController {
                              @PathVariable String filename,
                              @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,
+                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
                              Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
