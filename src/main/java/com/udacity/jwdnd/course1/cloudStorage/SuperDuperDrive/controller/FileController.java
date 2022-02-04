@@ -63,7 +63,7 @@ public class FileController {
         }
 
         model.addAttribute("files", fileService.getALlFiles(userId));
-        return "home";
+        return "result";
     }
 
     /**

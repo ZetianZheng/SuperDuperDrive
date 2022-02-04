@@ -42,3 +42,6 @@
 1. create the POJO: model/Credential
    create file form POJO: model/CredentialForm to receive the POJO that user send
 2. create file mapper with MyBaits: mapper/CredentialMapper
+
+### test
+![img.png](Notes/test.png)

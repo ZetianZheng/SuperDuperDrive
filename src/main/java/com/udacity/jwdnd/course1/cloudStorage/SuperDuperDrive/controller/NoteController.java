@@ -77,7 +77,7 @@ public class NoteController {
         model.addAttribute("notes", this.noteService.getAllNotes(userId));
         model.addAttribute("result", "success");
 
-        return "home";
+        return "result";
     }
 
     /**
@@ -129,6 +129,6 @@ public class NoteController {
         }
 
         model.addAttribute("notes", this.noteService.getAllNotes(userId));
-        return "home";
+        return "result";
     }
 }

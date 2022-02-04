@@ -3,6 +3,8 @@ package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.*;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/credential")
 public class CredentialController {
+    private Logger logger = LoggerFactory.getLogger(CredentialController.class);
+
     private final CredentialService credentialService;
     private final Util util;
 
@@ -66,7 +70,8 @@ public class CredentialController {
         model.addAttribute("credentials", this.credentialService.getAllCredentials(userId));
         model.addAttribute("result", "success");
 
-        return "home";
+//        return "home";
+        return "result";
     }
 
     /**
@@ -113,7 +118,7 @@ public class CredentialController {
         }
 
         model.addAttribute("credentials", this.credentialService.getAllCredentials(userId));
-        return "home";
+        return "result";
     }
 
 

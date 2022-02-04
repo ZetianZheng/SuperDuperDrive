@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialFo
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.FileService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.NoteService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.UserService;
@@ -20,14 +21,18 @@ public class HomeController {
     private final UserService userService;
     private final FileService fileService;
     private final NoteService noteService;
+    private final CredentialService credentialService;
     private final Util util;
 
-    public HomeController(UserService userService, FileService fileService, NoteService noteService, Util util) {
+    public HomeController(UserService userService, FileService fileService, NoteService noteService, CredentialService credentialService, Util util) {
         this.userService = userService;
         this.fileService = fileService;
         this.noteService = noteService;
+        this.credentialService = credentialService;
         this.util = util;
     }
+
+
 
     /**
      * getmapping to render the home page, create Model by ModelAttribute
@@ -48,6 +53,7 @@ public class HomeController {
 
         model.addAttribute("files", this.fileService.getALlFiles(userId));
         model.addAttribute("notes", this.noteService.getAllNotes(userId));
+        model.addAttribute("credentials", this.credentialService.getAllCredentials(userId));
         return "home";
     }
 }

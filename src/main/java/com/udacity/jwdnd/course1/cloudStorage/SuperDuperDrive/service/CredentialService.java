@@ -1,10 +1,13 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service;
 
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller.CredentialController;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.mapper.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.Credential;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.Note;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -14,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CredentialService {
+    private Logger logger = LoggerFactory.getLogger(CredentialService.class);
+
     private final UserMapper userMapper;
     private final CredentialMapper credentialMapper;
     private final EncryptionService encryptionService;
@@ -60,6 +65,7 @@ public class CredentialService {
         String key = getKey();
         String password = encryptionService.encryptValue(credentialForm.getPassword(), key);
         Credential credential = new Credential(null, url, userName, key, password, userId);
+        this.logger.info(url + " " + userName + " " + password);
         return credentialMapper.addCredential(credential);
     }
 
