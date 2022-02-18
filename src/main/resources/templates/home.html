@@ -14,7 +14,7 @@
                         <!-- Spring Security by default reserves the /logout endpoint so that the user can send the request to logout.-->
                         <div id="logoutDiv">
                             <form action="#" method="POST" th:action="@{'/logout'}">
-                                <button type="submit" class="btn btn-secondary float-right">Logout</button>
+                                <button id="btnLogout" type="submit" class="btn btn-secondary float-right">Logout</button>
                             </form>
                         </div>
                         <div id="contentDiv" style="clear: right;">
@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                                    <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                                    <button id="btnAddNewNote" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                                         + Add a New Note
                                     </button>
 
@@ -127,14 +127,14 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
+                                                    <button id="btnSaveNoteChange" type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                                    <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                                    <button id="btnNewCredential" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                                         + Add a New Credential
                                     </button>
 
@@ -151,20 +151,20 @@
                                             <tbody>
                                             <tr th:each="credential : ${credentials}">
                                                 <td>
-                                                    <button type="button" class="btn btn-success"
+                                                    <button id="btnEditCredential" type="button" class="btn btn-success"
                                                             th:data-id="${credential.getCredentialId()}"
                                                             th:data-url="${credential.getUrl()}"
                                                             th:data-username="${credential.getUserName()}"
                                                             th:data-decryptedPassword="${credential.getDecryptedPassword()}"
                                                             th:onclick="showCredentialModal(this.getAttribute('data-id'), this.getAttribute('data-url'), this.getAttribute('data-username'), this.getAttribute('data-decryptedPassword'))"
                                                     >Edit</button>
-                                                    <a class="btn btn-danger"
+                                                    <a id="btnDeleteCredential" class="btn btn-danger"
                                                        th:href="@{/credential/delete-cred/{credId}(credId = ${credential.getCredentialId()})}"
                                                     >Delete</a>
                                                 </td>
-                                                <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
-                                                <td th:text="${credential.getUserName()}">Example Credential Username</td>
-                                                <td th:text="${credential.getPassword()}">Example Credential Password</td>
+                                                <th id="tableCredURL" scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
+                                                <td id="tableCredUserName" th:text="${credential.getUserName()}">Example Credential Username</td>
+                                                <td id="tableCredPassword" th:text="${credential.getPassword()}">Example Credential Password</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -202,7 +202,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                                    <button id="btnSaveCredChange"type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
                                                 </div>
                                             </div>
                                         </div>
