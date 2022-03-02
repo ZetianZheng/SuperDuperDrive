@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("signup")
 public class SignupController {
-    // TODO 问老师为什么是final？
+    // TODO why final？
     private final UserService userService;
 
     public SignupController(UserService userService) {

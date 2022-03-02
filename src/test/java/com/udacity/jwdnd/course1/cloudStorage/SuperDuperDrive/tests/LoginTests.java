@@ -19,7 +19,7 @@ import org.springframework.boot.web.server.LocalServerPort;
  * 3. before all 设置webDriverManager，afterAll退出
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class loginTests {
+public class LoginTests {
     @LocalServerPort
     private Integer port;
 
