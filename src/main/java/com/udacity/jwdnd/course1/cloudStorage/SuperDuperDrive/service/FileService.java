@@ -34,7 +34,6 @@ public class FileService {
         return this.fileMapper.addNewFile(new File(null, fileName, contentType, fileSize, userId, fileData));
     }
 
-    // TODO: use a better way to find there is no duplicate name file. can we directly use a hashmap?
     public boolean noDuplicateFileName(String filename, Integer userId) {
         String[] allFiles = getALlFiles(userId);
 

@@ -9,11 +9,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  * Authentication 怎么用by spring security
- * 两个annotation:
- * 1. @Configuration: spring will use as a source of configuration for the IOC context.
- *    表示spring会用他做IOC的配置context
- * 2. @EnableWebSecurity 让spring 知道这个类是为了配置spring security的
- * 3. WebSecurityConfigurerAdapter 让我们写一个adapter 为了web security 配置。
+ * <p>两个annotation:</p>
+ * <ul>
+ *    <li>@Configuration: spring will use as a source of configuration for the IOC context.
+ *     表示spring会用他做IOC的配置context</li>
+ *   <li>@EnableWebSecurity 让spring 知道这个类是为了配置spring security的</li>
+ *   <li>WebSecurityConfigurerAdapter 让我们写一个adapter 为了web security 配置。</li>
+ * </ul>
+ *
  */
 @Configuration
 @EnableWebSecurity

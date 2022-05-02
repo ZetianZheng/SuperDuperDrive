@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,7 +33,6 @@ public class FileController {
      * @param newFileForm the form object which user submitted
      * @param model use to render thymeleaf page
      * @return
-     * TODO 使用透明窗口display "message" to client
      */
     @PostMapping
     public String addNewFile(Authentication authentication,
@@ -47,10 +47,15 @@ public class FileController {
         // get file object:
         MultipartFile multipartFile = newFileForm.getFile();
         String filename = multipartFile.getOriginalFilename();
+        // Handle file if it exceeds the max size limit.
+        // TODO how to use advice to improve this?
+        if (multipartFile.getSize() > 1048576) {
+            throw new MaxUploadSizeExceededException(multipartFile.getSize());
+        }
         // whether the duplicate name file exists:
         Boolean isNoDuplicate = fileService.noDuplicateFileName(filename, userId);
 
-        if(isNoDuplicate) {
+        if(Boolean.TRUE.equals(isNoDuplicate)) {
             try {
                 fileService.addFile(multipartFile, username);
             } catch (IOException e) {
