@@ -34,7 +34,7 @@ public class FileController {
      * @param model use to render thymeleaf page
      * @return
      */
-    @PostMapping
+    @PostMapping("/file_uploading")
     public String addNewFile(Authentication authentication,
                              @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,

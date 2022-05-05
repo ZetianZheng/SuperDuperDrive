@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/home")
 public class HomeController {
-    // TODO: why final?
     private final UserService userService;
     private final FileService fileService;
     private final NoteService noteService;

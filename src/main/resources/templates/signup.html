@@ -11,16 +11,16 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <div class="form-group">
-                <label><a>Back to Login</a></label>
+                <label><a th:href="@{/login}">Back to Login</a></label>
             </div>
 <!--TODO 问老师 这里为什么没有使用th:field 来绑定form中的各种变量（和signUP controller 一起问）：-->
             <h1 class="display-5">Sign Up</h1>
-            <form action="#" th:action="@{/signup}" method="POST">
-                <div id="success-msg" th:if="${signupSuccess}" class="alert alert-dark">
+            <form action="#" th:object="${User}" th:action="@{/signup}" method="POST">
+                <div id="signup-success-msg" th:if="${isSuccess}" class="alert alert-dark">
                     You successfully signed up! Please continue to the <a id="login-link" th:href="@{/login}">login</a> page.
                 </div>
-                <div id="error-msg" th:if="${signupError}"class="alert alert-danger">
-                    <span th:text="${signupError}">Example Signup Error Message</span>
+                <div id="signup-error-msg" th:if="${isFail}"class="alert alert-danger">
+                    <span th:text="${signupMsg}">Example Signup Error Message</span>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -42,7 +42,7 @@
                         <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" id="buttonSignUp">Sign Up</button>
+                <button type="submit" class="btn btn-primary" id="signupBtn">Sign Up</button>
             </form>
         </div>
     </body>

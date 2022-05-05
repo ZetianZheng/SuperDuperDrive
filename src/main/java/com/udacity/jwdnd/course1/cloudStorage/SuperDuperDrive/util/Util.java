@@ -5,6 +5,9 @@ import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.UserServic
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+/**
+ * some utils components
+ */
 @Component
 public class Util {
     private final UserService userService;
@@ -13,6 +16,11 @@ public class Util {
         this.userService = userService;
     }
 
+    /**
+     * get user from authorization
+     * @param authentication
+     * @return
+     */
     public User getUserByAuth(Authentication authentication) {
         String username = authentication.getName();
         return userService.getUser(username);

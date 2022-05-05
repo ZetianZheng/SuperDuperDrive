@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.Credential
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ public class CredentialController {
     private final CredentialService credentialService;
     private final Util util;
 
+    @Autowired
     public CredentialController(CredentialService credentialService, Util util) {
         this.credentialService = credentialService;
         this.util = util;
@@ -40,6 +42,7 @@ public class CredentialController {
     /**
      * upload a new credential or edit a existing credential.
      * decide by whether the credential id is empty or not
+     *
      * @param authentication
      * @param newFileForm
      * @param newNoteForm
@@ -70,7 +73,6 @@ public class CredentialController {
         model.addAttribute("credentials", this.credentialService.getAllCredentials(userId));
         model.addAttribute("result", "success");
 
-//        return "home";
         return "result";
     }
 
