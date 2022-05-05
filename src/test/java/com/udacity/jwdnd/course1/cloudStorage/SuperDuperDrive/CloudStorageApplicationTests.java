@@ -36,9 +36,9 @@ class CloudStorageApplicationTests {
 
 	@AfterEach
 	public void afterEach() {
-//		if (this.driver != null) {
-//			driver.quit();
-//		}
+		if (this.driver != null) {
+			driver.quit();
+		}
 	}
 
 	@Test
@@ -81,8 +81,8 @@ class CloudStorageApplicationTests {
 		inputPassword.sendKeys(password);
 
 		// Attempt to sign up.
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonSignUp")));
-		WebElement buttonSignUp = driver.findElement(By.id("buttonSignUp"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("signupBtn")));
+		WebElement buttonSignUp = driver.findElement(By.id("signupBtn"));
 		buttonSignUp.click();
 
 		/* Check that the sign up was successful. 

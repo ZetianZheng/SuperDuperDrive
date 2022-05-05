@@ -41,7 +41,11 @@ public class LoginPage {
         inputPassword.sendKeys(passWord);
     }
 
-    public void login() {
+    public void login(String username, String password) {
+        setUserName(username);
+        setInputPassword(password);
         loginButton.click();
     }
+
+
 }

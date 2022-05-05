@@ -12,7 +12,6 @@
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
 <!--           JSP to get msg <div id="success-msg"><span>[[${signupMsg}]]</span></div>-->
-    <!--TODO 询问老师 thymeleaf 各类标签的意义,以及为什么login不需要thymeleaf标签绑定variable就可以登录-->
             <form th:action="@{/login}" action="#" method="POST">
                 <div  class="alert alert-success" th:if="${param.isSuccess}">
                     <span id="signup-success-msg" th:text="${param.signupMsg}">Successes signup msg</span>

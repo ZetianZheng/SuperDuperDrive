@@ -22,9 +22,9 @@ public class FileService {
         this.userMapper = userMapper;
     }
 
-    public int addFile(MultipartFile newFile, String username) throws IOException {
-        User user =  userMapper.getUserByName(username);
-        Integer userId = user.getUserId();
+    public int addFile(MultipartFile newFile, Integer userId) throws IOException {
+//        User user =  userMapper.getUserByName(username);
+//        Integer userId = user.getUserId();
 
         byte[] fileData = newFile.getBytes();
         String contentType = newFile.getContentType();

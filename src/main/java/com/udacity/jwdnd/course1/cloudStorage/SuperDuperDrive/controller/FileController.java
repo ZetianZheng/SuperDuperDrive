@@ -1,11 +1,14 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.exceptions.FileDuplicateException;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.FileService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,8 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+
+import static com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.constants.Messages.*;
 
 @Controller
 @RequestMapping("/home")
@@ -22,53 +28,73 @@ public class FileController {
     private final FileService fileService;
     private final Util util;
 
+    private Logger logger = LoggerFactory.getLogger(FileController.class);
+
     public FileController(FileService fileService, Util util) {
         this.fileService = fileService;
         this.util = util;
     }
 
     /**
-     * add new file to the database.
-     * @param authentication use authentication by Spring security to get the user
-     * @param newFileForm the form object which user submitted
-     * @param model use to render thymeleaf page
+     * Add new file to the database.
+     * @param authentication authentication used to get the username info
+     * @param multipartFile post param, uploaded file
      * @return
      */
-    @PostMapping("/file_uploading")
+    @PostMapping("/file-uploading")
     public String addNewFile(Authentication authentication,
-                             @ModelAttribute("newFileForm") FileForm newFileForm,
-                             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
-                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
-                             Model model) {
-        // get username from authentication and then got User POJO from User service:
-        User user = util.getUserByAuth(authentication);
-        Integer userId = user.getUserId();
-        String username = user.getUsername();
-        // get file object:
-        MultipartFile multipartFile = newFileForm.getFile();
-        String filename = multipartFile.getOriginalFilename();
-        // Handle file if it exceeds the max size limit.
-        // TODO how to use advice to improve this?
-        if (multipartFile.getSize() > 1048576) {
-            throw new MaxUploadSizeExceededException(multipartFile.getSize());
-        }
-        // whether the duplicate name file exists:
-        Boolean isNoDuplicate = fileService.noDuplicateFileName(filename, userId);
+                             @RequestParam("fileUpload") MultipartFile multipartFile,
+                             RedirectAttributes redirectAttributes) {
+        logger.info("[file][uploading] uploading file start!");
+        String fileErr = null;
+        final String fileOk = FILE_UPLOAD_SUCCESS;
+        byte[] fb = null;
+        String fileName = null;
 
-        if(Boolean.TRUE.equals(isNoDuplicate)) {
-            try {
-                fileService.addFile(multipartFile, username);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            // get username from authentication and then got User POJO from User service:
+            Integer userId = util.getUserByAuth(authentication).getUserId();
+            fileName = multipartFile.getOriginalFilename();
+            long fileSize =multipartFile.getSize();
+
+            logger.info("[file] File \"{}\" has been selected.", fileName);
+            // throw exception if file is bigger than 1 M
+            if (fileSize > 1048576) {
+                throw new MaxUploadSizeExceededException(fileSize);
             }
-            model.addAttribute("result", "success");
+
+            // throw exception if there exists same file in database
+            if (!fileService.noDuplicateFileName(fileName, userId)) {
+                throw(new FileDuplicateException("Duplicated file uploaded"));
+            }
+
+            // try to add this file to database.
+            fileService.addFile(multipartFile, userId);
+        }
+        catch (MaxUploadSizeExceededException me){
+            logger.warn("[Error][file] File {} upload failed, limitation exceed!", fileName);
+            logger.error(me.toString());
+            fileErr = FILE_SIZE_LIMIT_EXCEED;
+        }
+        catch (FileDuplicateException fe){
+            logger.warn("[Error][file] File {} upload failed, this file exists!", fileName);
+            fileErr = FILE_DUPLICATE_ERROR;
+        }
+        catch (Exception e){
+            logger.warn("[Error][file] File {} upload failed, some unknown problems occurred!", fileName);
+            fileErr = FILE_OTHER_ERR;
+            logger.error(e.toString());
+        }
+        // use redirectAttributes to combine url and send params to get render by html.
+        if(fileErr==null) {
+            redirectAttributes.addAttribute("fileupok",true);
+            redirectAttributes.addAttribute("fileupmsg",String.format(fileOk, fileName));
         } else {
-            model.addAttribute("result", "error");
-            model.addAttribute("message", "duplicated file found! please change the file name or delete old version.");
+            redirectAttributes.addAttribute("fileupnotok",true);
+            redirectAttributes.addAttribute("fileupmsg",String.format(fileErr, fileName));
         }
 
-        model.addAttribute("files", fileService.getALlFiles(userId));
-        return "result";
+        return ("redirect:/home");
     }
 
     /**
