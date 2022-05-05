@@ -24,7 +24,7 @@ public class LoginPage {
     @FindBy(id="inputPassword")
     private WebElement inputPassword;
 
-    @FindBy(id="login-button")
+    @FindBy(id="btnLogin")
     private WebElement loginButton;
 
     // 2. 构造函数：
@@ -34,10 +34,12 @@ public class LoginPage {
 
     // 3. support functions
     public void setUserName(String userName) {
+        inputUsername.clear();
         inputUsername.sendKeys(userName);
     }
 
     public void setInputPassword(String passWord) {
+        inputPassword.clear();
         inputPassword.sendKeys(passWord);
     }
 

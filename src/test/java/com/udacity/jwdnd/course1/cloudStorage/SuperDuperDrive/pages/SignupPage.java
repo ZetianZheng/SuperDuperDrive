@@ -21,8 +21,11 @@ public class SignupPage {
     @FindBy(id="signupBtn")
     WebElement signupBtn;
 
-    @FindBy(id="success-msg")
+    @FindBy(id="signup-success-msg")
     WebElement signupSuccessMsg;
+
+    @FindBy(id="signup-error-msg")
+    WebElement signupErrsMsg;
 
     public SignupPage(WebDriver webDriver) {
         PageFactory.initElements(webDriver,this);
@@ -41,4 +44,7 @@ public class SignupPage {
     }
 
     public boolean signupSuccessMsgDisplayed() {return signupSuccessMsg.isDisplayed();}
+    public boolean signupErrMsgDisplayed() {
+        return signupErrsMsg.isDisplayed();
+    }
 }

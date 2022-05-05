@@ -1,18 +1,27 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.exceptions.InvalidUploadException;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.exceptions.RepositoryFailException;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.*;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.service.NoteService;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidKeyException;
+
+import static com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.constants.Messages.*;
+
 @Controller
-@RequestMapping("/note")
+@RequestMapping("/home")
 public class NoteController {
     private final NoteService noteService;
     private final Util util;
+    Logger logger = LoggerFactory.getLogger(NoteController.class);
 
     public NoteController(NoteService noteService, Util util) {
         this.noteService = noteService;
@@ -20,68 +29,65 @@ public class NoteController {
     }
 
     /**
-     * if have GET request from "/note", render home page and only note list for user
-     * TODO: Is there any method not to write 3 modelAttribute?
+     * try to add a new note
      * @param authentication
-     * @param newFileForm
      * @param newNoteForm
      * @param model
      * @return
      */
-    @GetMapping
-    public String homeNoteView(
-            Authentication authentication,
-            @ModelAttribute("newFileForm") FileForm newFileForm,
-            @ModelAttribute("newNoteForm") NoteForm newNoteForm,
-            @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
-            Model model) {
-        User user = util.getUserByAuth(authentication);
-        Integer userId = user.getUserId();
-
-        model.addAttribute("notes", this.noteService.getAllNotes(userId));
-        return "home";
-    }
-
-    /**
-     * TODO: do we need to check if the note exists?
-     * @param authentication
-     * @param newFileForm
-     * @param newNoteForm
-     * @param model
-     * @return
-     */
-    @PostMapping("add-note")
+    @PostMapping("/add-note")
     public String addNewNote(Authentication authentication,
-                             @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,
-                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
                              Model model) {
-        User user = util.getUserByAuth(authentication);
-        Integer userId = user.getUserId();
-        String userName = user.getUsername();
+        String noteErr = null;
+        Integer noteId = null;
+        Integer userId = null;
 
-        // get note object from user submit:
-        // get noteIdStr from user submit, if this note exists, update it, if not, create a new one
-        String noteIdStr = newNoteForm.getNoteId();
-        String title = newNoteForm.getTitle();
-        String description = newNoteForm.getDescription();
+        try {
+            User user = util.getUserByAuth(authentication);
+            userId = user.getUserId();
+            String userName = user.getUsername();
+            Integer rowNum;
 
-        // create or edit note:
-        if (noteIdStr.isEmpty()) {
-            noteService.addNote(title, description, userName);
-        } else {
-            int noteId = Integer.parseInt(noteIdStr);
-            noteService.editNote(noteId, title, description);
+            // get note object from user submit:
+            // get noteIdStr from user submit, if this note exists, update it, if not, create a new one
+            String noteIdStr = newNoteForm.getNoteId();
+            String title = newNoteForm.getTitle();
+            String description = newNoteForm.getDescription();
+
+            if (noteIdStr.isEmpty()) {
+                logger.info("[Notes][add note] Creat Note: title: {}, description: {}.", title, description);
+                rowNum = noteService.addNote(title, description, userName);
+            } else {
+                logger.info("[Notes][add note] Edit Note: Id: {}, title: {}, description: {}.", noteIdStr, title, description);
+                noteId = Integer.parseInt(noteIdStr);
+                rowNum = noteService.editNote(noteId, title, description);
+            }
+
+            if (rowNum < 0) {
+                throw new RepositoryFailException();
+            }
+        } catch(RepositoryFailException e) {
+            noteErr = NOTE_UPLOAD_FAIL;
+        } catch (Exception e) {
+            logger.warn("[Error][Notes][add note] some unexpected error occurred!");
+            noteErr = NOTE_OTHER_ERR;
         }
 
-        model.addAttribute("notes", this.noteService.getAllNotes(userId));
-        model.addAttribute("result", "success");
+        if (noteErr == null && userId != null) {
+            model.addAttribute(NOTES, this.noteService.getAllNotes(userId));
+            model.addAttribute(RESULT, SUCCESS);
+        } else {
+            model.addAttribute(RESULT, ERROR);
+            assert noteErr != null;
+            model.addAttribute(MESSAGE, String.format(noteErr, noteId));
+        }
 
-        return "result";
+        return RESULT;
     }
 
     /**
-     * TODO: security problem, what if a user request the noteId for another user? add a method: isNoteBelongToUser(NoteId, UserId)
+     * Get note by noteId
      * @param authentication
      * @param noteId
      * @return
@@ -96,14 +102,14 @@ public class NoteController {
         if (noteService.isNoteBelongToUser(noteId, userId)) {
             return noteService.getNote(noteId);
         } else {
-            model.addAttribute("result", "error");
-            model.addAttribute("message", "Error, this note not belong to you!");
+            model.addAttribute(RESULT, ERROR);
+            model.addAttribute(MESSAGE, NOTE_BELONGS_ERROR);
             return null;
         }
     }
 
     /**
-     * TODO: security problem, what if a user delete the noteId for another user? add a method: isNoteBelongToUser(NoteId, UserId)
+     * Delete notes
      * @param authentication
      * @param noteId
      * @param newNoteForm
@@ -112,23 +118,22 @@ public class NoteController {
     @GetMapping("/delete-note/{noteId}")
     public String deleteNote(Authentication authentication,
                              @PathVariable Integer noteId,
-                             @ModelAttribute("newFileForm") FileForm newFileForm,
                              @ModelAttribute("newNoteForm") NoteForm newNoteForm,
                              Model model) {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
 
         if (noteService.isNoteBelongToUser(noteId, userId)) {
-            System.out.println("delete success!");
+            logger.info("[Notes][delete] Delete success!");
             noteService.deleteNote(noteId);
-            model.addAttribute("result", "success");
+            model.addAttribute(RESULT, "success");
         } else {
-            System.out.println("delete error!");
-            model.addAttribute("result", "error");
-            model.addAttribute("message", "Error, this note not belong to you!");
+            logger.info("[Notes][delete] Delete fail!");
+            model.addAttribute(RESULT, ERROR);
+            model.addAttribute(MESSAGE, NOTE_BELONGS_ERROR);
         }
 
-        model.addAttribute("notes", this.noteService.getAllNotes(userId));
-        return "result";
+        model.addAttribute(NOTES, this.noteService.getAllNotes(userId));
+        return RESULT;
     }
 }

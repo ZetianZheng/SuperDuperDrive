@@ -28,7 +28,7 @@ public class SignupController {
     public String signupView(@ModelAttribute("User") User user,  Model model) {return "signup";}
 
     @PostMapping
-    public String signupUser(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+    public String signupUser(@ModelAttribute("User") User user, Model model, RedirectAttributes redirectAttributes) {
         logger.info("Info: Sign Up a New User!");
         String userName = user.getUsername();
         logger.info("Info: User name is {}", userName);
@@ -53,13 +53,13 @@ public class SignupController {
             logger.info("Info: New user {} has been created!", userName);
             redirectAttributes.addAttribute("isSuccess",true);
             redirectAttributes.addAttribute("signupMsg",SIGNUP_SUCCESS+userName);
-            return "redirect:/login";
+            return "redirect:/signup";
         } else{
             // 如果没有注册成功，给model注入signupError 变量，
-            model.addAttribute("isFail", true);
-            model.addAttribute("signupMsg", signupError);
+            redirectAttributes.addAttribute("isFail", true);
+            redirectAttributes.addAttribute("signupMsg", signupError);
+            // 返回渲染的页面。
+            return "redirect:signup";
         }
-        // 返回渲染的页面。
-        return "signup";
     }
 }

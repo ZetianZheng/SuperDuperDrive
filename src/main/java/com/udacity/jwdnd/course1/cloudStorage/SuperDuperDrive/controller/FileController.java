@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.controller;
 
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.exceptions.FileDuplicateException;
+import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.exceptions.FileNotSelectedException;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.FileForm;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.NoteForm;
@@ -48,7 +49,6 @@ public class FileController {
         logger.info("[file][uploading] uploading file start!");
         String fileErr = null;
         final String fileOk = FILE_UPLOAD_SUCCESS;
-        byte[] fb = null;
         String fileName = null;
 
         try {
@@ -56,8 +56,13 @@ public class FileController {
             Integer userId = util.getUserByAuth(authentication).getUserId();
             fileName = multipartFile.getOriginalFilename();
             long fileSize =multipartFile.getSize();
+            //First test if user really selected a file
 
             logger.info("[file] File \"{}\" has been selected.", fileName);
+            if(fileName.length()==0) {
+                throw(new FileNotSelectedException("No file was selected"));
+            }
+
             // throw exception if file is bigger than 1 M
             if (fileSize > 1048576) {
                 throw new MaxUploadSizeExceededException(fileSize);
@@ -80,21 +85,17 @@ public class FileController {
             logger.warn("[Error][file] File {} upload failed, this file exists!", fileName);
             fileErr = FILE_DUPLICATE_ERROR;
         }
+        catch (FileNotSelectedException fe){
+            logger.warn("[Error][file] File upload failed, file is empty!");
+            fileErr = FILE_NOT_SELECTED_ERR;
+        }
         catch (Exception e){
             logger.warn("[Error][file] File {} upload failed, some unknown problems occurred!", fileName);
             fileErr = FILE_OTHER_ERR;
             logger.error(e.toString());
         }
-        // use redirectAttributes to combine url and send params to get render by html.
-        if(fileErr==null) {
-            redirectAttributes.addAttribute("fileupok",true);
-            redirectAttributes.addAttribute("fileupmsg",String.format(fileOk, fileName));
-        } else {
-            redirectAttributes.addAttribute("fileupnotok",true);
-            redirectAttributes.addAttribute("fileupmsg",String.format(fileErr, fileName));
-        }
 
-        return ("redirect:/home");
+        return redirectToHome(redirectAttributes, fileOk, fileErr, fileName);
     }
 
     /**
@@ -125,25 +126,46 @@ public class FileController {
      * before delete, the newFileForm object be created to render home.
      * @param authentication
      * @param filename
-     * @param model
      * @return
      */
     @GetMapping("/delete-file/{filename}")
     public String deleteFile(Authentication authentication,
                              @PathVariable String filename,
-                             @ModelAttribute("newFileForm") FileForm newFileForm,
-                             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
-                             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
-                             Model model) {
-        User user = util.getUserByAuth(authentication);
-        Integer userId = user.getUserId();
+                             RedirectAttributes redirectAttributes) {
+        String fileErr = null;
+        String fileOk = FILE_DELETE_SUCCESS;
 
         // delete the file:
-        fileService.deleteFile(filename, userId);
-        // model:
-        model.addAttribute("files", fileService.getALlFiles(userId));
-        model.addAttribute("result", "success");
+        try {
+            User user = util.getUserByAuth(authentication);
+            Integer userId = user.getUserId();
+            int rowNum = fileService.deleteFile(filename, userId);
+            if (rowNum < 0) fileErr = FILE_DELETE_ERROR;
+        } catch (Exception e) {
+            fileErr = FILE_OTHER_ERR;
+            logger.warn(e.getMessage());
+        }
 
-        return "home";
+        return redirectToHome(redirectAttributes, fileOk, fileErr, filename);
+    }
+
+    /**
+     * use redirectAttributes to combine url and send params to get render by html.
+     * @param redirectAttributes
+     * @param fileOk
+     * @param fileErr
+     * @param filename
+     * @return
+     */
+    private String redirectToHome(RedirectAttributes redirectAttributes, String fileOk, String fileErr, String filename) {
+        if(fileErr==null) {
+            redirectAttributes.addAttribute("fileupok",true);
+            redirectAttributes.addAttribute("fileupmsg",String.format(fileOk, filename));
+        } else {
+            redirectAttributes.addAttribute("fileupnotok",true);
+            redirectAttributes.addAttribute("fileupmsg",String.format(fileErr, filename));
+        }
+
+        return ("redirect:/home");
     }
 }

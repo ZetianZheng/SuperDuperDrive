@@ -3,10 +3,14 @@ package com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.tests;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.Note;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.pages.HomePage;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.pages.ResultPage;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NoteTests extends CloudStorageTest{
     private final String noteTitle = "note here";
     private final String noteDescription = "some description";
@@ -15,8 +19,9 @@ class NoteTests extends CloudStorageTest{
      * Test that creates and delete a note.
      */
     @Test
+    @Order(1)
     void testCreatedThenDelete() {
-        HomePage homePage = signUpAndLogin();
+        HomePage homePage = login();
         createNote(noteTitle, noteDescription, homePage);
         homePage.navToNotesTab();
         homePage = new HomePage(driver);
@@ -29,9 +34,10 @@ class NoteTests extends CloudStorageTest{
      * Test that creates a note and view it
      */
     @Test
+    @Order(2)
     void testCreateAndView() {
         // sign up and login, then create a new note
-        HomePage homePage = signUpAndLogin();
+        HomePage homePage = login();
         createNote(noteTitle, noteDescription, homePage);
 
         // navigate to note tab and verify the first note
@@ -50,9 +56,10 @@ class NoteTests extends CloudStorageTest{
      * Test change a note
      */
     @Test
+    @Order(3)
     void testModify() {
         // sign up and login the home page
-        HomePage homePage = signUpAndLogin();
+        HomePage homePage = login();
         createNote(noteTitle, noteDescription, homePage);
 
         // navigate to note tab and test edit the note

@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.Note;
 import com.udacity.jwdnd.course1.cloudStorage.SuperDuperDrive.model.User;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,11 +48,11 @@ public class NoteService {
         noteMapper.deleteNoteById(noteId);
     }
 
-    public void editNote(Integer noteId, String title, String description){
-        noteMapper.editNote(noteId, title, description);
+    public int editNote(Integer noteId, String title, String description){
+        return noteMapper.editNote(noteId, title, description);
     }
 
-    public Note[] getAllNotes(Integer userId){
+    public Note[] getAllNotes(@NonNull Integer userId){
         return noteMapper.getNotes(userId);
     }
 }

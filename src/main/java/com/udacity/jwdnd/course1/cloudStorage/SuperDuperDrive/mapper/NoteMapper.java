@@ -22,7 +22,12 @@ public interface NoteMapper {
     @Select("SELECT * FROM NOTES WHERE userid = #{userId}")
     Note[] getNotes(Integer userId);
 
+    // Mybaits must return Note[]?
+    @Select("SELECT * FROM NOTES WHERE userid = #{userId} AND notetitle = #{title}")
+    Note[] getNotesTitle(Integer userId, String title);
+
+
     // change the note content
     @Update("UPDATE NOTES SET notetitle = #{title}, notedescription = #{description} WHERE noteid = #{noteId}")
-    void editNote(Integer noteId, String title, String description);
+    int editNote(Integer noteId, String title, String description);
 }

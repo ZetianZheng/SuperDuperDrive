@@ -32,7 +32,6 @@ public class HomeController {
     }
 
 
-
     /**
      * getmapping to render the home page, create Model by ModelAttribute
      * @param authentication
@@ -46,7 +45,7 @@ public class HomeController {
             @ModelAttribute("newFileForm") FileForm newFileForm,
             @ModelAttribute("newNoteForm") NoteForm newNoteForm,
             @ModelAttribute("newCredForm") CredentialForm newCredentialForm,
-            Model model) {
+            Model model) throws Exception {
         User user = util.getUserByAuth(authentication);
         Integer userId = user.getUserId();
 

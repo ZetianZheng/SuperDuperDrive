@@ -42,12 +42,15 @@ class LoginTests extends CloudStorageTest{
 
         SignupPage signupPage = new SignupPage(driver);
         signupPage.signUpNow("zane", "John", "123", "123");
-        assertEquals("Login", driver.getTitle());
         LoginPage loginPage = new LoginPage(driver);
+        driver.get("http://localhost:" + this.port + "/login");
         loginPage.login("123", "123");
         assertEquals("Home", driver.getTitle());
     }
 
+    /**
+     * test login but userNotExists
+     */
     @Test
     void testLoginFLow_userNotExists() {
         driver.get("http://localhost:" + port + "/login");

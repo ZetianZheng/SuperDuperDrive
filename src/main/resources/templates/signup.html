@@ -16,11 +16,11 @@
 <!--TODO 问老师 这里为什么没有使用th:field 来绑定form中的各种变量（和signUP controller 一起问）：-->
             <h1 class="display-5">Sign Up</h1>
             <form action="#" th:object="${User}" th:action="@{/signup}" method="POST">
-                <div id="signup-success-msg" th:if="${isSuccess}" class="alert alert-dark">
+                <div id="signup-success-msg" th:if="${param.isSuccess}" class="alert alert-dark">
                     You successfully signed up! Please continue to the <a id="login-link" th:href="@{/login}">login</a> page.
                 </div>
-                <div id="signup-error-msg" th:if="${isFail}"class="alert alert-danger">
-                    <span th:text="${signupMsg}">Example Signup Error Message</span>
+                <div id="signup-error-msg" th:if="${param.isFail}"class="alert alert-danger">
+                    <span th:text="${param.signupMsg}">Example Signup Error Message</span>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
