@@ -53,13 +53,13 @@ public class SignupController {
             logger.info("Info: New user {} has been created!", userName);
             redirectAttributes.addAttribute("isSuccess",true);
             redirectAttributes.addAttribute("signupMsg",SIGNUP_SUCCESS+userName);
-            return "redirect:/signup";
+            return "redirect:/login";
         } else{
             // 如果没有注册成功，给model注入signupError 变量，
             redirectAttributes.addAttribute("isFail", true);
             redirectAttributes.addAttribute("signupMsg", signupError);
             // 返回渲染的页面。
-            return "redirect:signup";
+            return "redirect:/signup";
         }
     }
 }
